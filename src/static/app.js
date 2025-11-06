@@ -7,7 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Function to fetch activities from API
   async function fetchActivities() {
     try {
-      const response = await fetch("/activities");
+      // Avoid cached responses so the client always gets the latest data
+      const response = await fetch("/activities", { cache: "no-store" });
       const activities = await response.json();
 
       // Clear loading message
@@ -52,6 +53,44 @@ document.addEventListener("DOMContentLoaded", () => {
             chip.textContent = p;
 
             li.appendChild(chip);
+
+            // Delete/unregister button for each participant
+            const deleteBtn = document.createElement("button");
+            deleteBtn.className = "participant-delete";
+            deleteBtn.setAttribute("aria-label", `Unregister ${p} from ${name}`);
+            deleteBtn.textContent = "✖";
+
+            // Click handler to unregister participant
+            deleteBtn.addEventListener("click", async (e) => {
+              e.stopPropagation();
+
+              // Optionally confirm with the user
+              const confirmText = `Unregister ${p} from ${name}?`;
+              if (!window.confirm(confirmText)) return;
+
+              try {
+                const resp = await fetch(
+                  `/activities/${encodeURIComponent(name)}/unregister?email=${encodeURIComponent(
+                    p
+                  )}`,
+                  { method: "POST" }
+                );
+
+                const result = await resp.json();
+                if (resp.ok) {
+                  // Refresh activities to update lists
+                  fetchActivities();
+                } else {
+                  console.error("Failed to unregister:", result.detail || result);
+                  alert(result.detail || "Failed to unregister participant");
+                }
+              } catch (err) {
+                console.error("Error unregistering participant:", err);
+                alert("Error unregistering participant. See console for details.");
+              }
+            });
+
+            li.appendChild(deleteBtn);
             participantsList.appendChild(li);
           });
         } else {
@@ -101,7 +140,8 @@ document.addEventListener("DOMContentLoaded", () => {
         signupForm.reset();
 
         // Refresh activities so participants list updates immediately
-        fetchActivities();
+        // Await the refresh to ensure the UI reflects the new participant
+        await fetchActivities();
       } else {
         messageDiv.textContent = result.detail || "An error occurred";
         messageDiv.className = "error";
