@@ -142,3 +142,63 @@ footer {
   padding: 20px;
   color: #666;
 }
+
+/* Participants section */
+.participants-section {
+  margin-top: 12px;
+}
+
+.participants-section strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+/* Bulleted list for participants */
+.participants-list {
+  list-style: none; /* hide bullet points */
+  padding-left: 0;
+  margin: 0;
+  display: block;
+}
+
+/* Delete/unregister button next to participant */
+.participant-delete {
+  background: transparent;
+  border: none;
+  color: #c62828;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+  transition: background-color 0.12s;
+}
+
+.participant-delete:hover {
+  background-color: rgba(198,40,40,0.08);
+}
+
+/* Each participant row */
+.participant-item {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* A small chip for the participant name/email */
+.participant-chip {
+  background: linear-gradient(180deg, #eaf0ff, #dde7ff);
+  color: #0d47a1;
+  padding: 6px 10px;
+  border-radius: 16px;
+  font-size: 14px;
+  box-shadow: 0 1px 0 rgba(13,71,161,0.06);
+}
+
+/* Muted hint when no participants are signed up yet */
+.no-participants {
+  color: #666;
+  font-style: italic;
+  padding-left: 2px;
+}
